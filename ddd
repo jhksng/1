@@ -1,0 +1,33 @@
+import paho.mqtt.client as mqtt
+
+def on_connect(client, userdata, flag, rc, prop=None):
+	client.subscribe("chat") # "chat" 토픽으로 구독 신청
+
+def on_message(client, userdata, msg):
+	m = str(msg.payload.decode("utf-8"))
+	tokens=m.split(":")
+	name = tokens[0]
+	mes = tokens[1]
+
+	if(username!=name):
+		print("\t\t("+name+")"+mes)
+
+
+ip = input("브로커의 IP 주소>>")
+username = input("사용자 이름>>")
+print("입력하면 바로 전송합니다.")
+
+client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+client.on_connect = on_connect # on_connect 콜백 함수 등록
+client.on_message = on_message # on_message 콜백 함수 등록
+client.connect(ip, 1883) # 브로커에 연결
+client.loop_start() # 메시지 루프를 실행하는 스레드 생성
+
+while True:
+	message = input("") # 사용자로부터 문자열 입력
+	if message == "exit" :
+		break
+	client.publish("chat",username+":"+message)
+
+client.loop_stop() # 메시지 루프를 실행하는 스레드 종료
+client.disconnect()
