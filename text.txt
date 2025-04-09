@@ -1,0 +1,30 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+// using UnityEngine.UI; 레거시 text 사용시
+using TMPro;
+public class GameDirector : MonoBehaviour
+{
+    GameObject car;
+    GameObject flag;
+    GameObject distance;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        this.car = GameObject.Find("car_0");
+        this.flag = GameObject.Find("flag_0");
+        this.distance = GameObject.Find("distance");
+    }
+    // UpdatDistancecalled once per frame
+    void Update()
+    {
+        float length = this.flag.transform.position.x - this.car.transform.position.x;
+        
+        if(length<0)
+            this.distance.GetComponent<TextMeshProUGUI>().text = "목표지점 초과! "+length.ToString("F2")+"m"; //레거시는 <Text>
+        else
+            this.distance.GetComponent<TextMeshProUGUI>().text = "목표지점 미달! "+length.ToString("F2")+"m";
+    
+    }
+}
